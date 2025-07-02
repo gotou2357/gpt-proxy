@@ -1,5 +1,6 @@
 export default async function handler(req, res) {
-  const { message } = await req.json(); 
+  const body = await req.text(); // ← ここ変更
+  const { message } = JSON.parse(body); // ← ここ追加
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
