@@ -1,6 +1,9 @@
-export default async function handler(req, res) {
-  const body = await req.text(); // ← ここ変更
-  const { message } = JSON.parse(body); // ← ここ追加
+export const config = {
+  runtime: 'edge',
+};
+
+export default async function handler(req) {
+  const { message } = await req.json(); // ← Web標準RequestではOK
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -18,5 +21,11 @@ export default async function handler(req, res) {
   });
 
   const data = await response.json();
-  res.status(200).json({ text: data.choices[0].message.content });
+
+  return new Response(JSON.stringify({ text: data.choices[0].message.content }), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 }
