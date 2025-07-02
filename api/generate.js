@@ -1,6 +1,5 @@
-// /api/generate.js
 export default async function handler(req, res) {
-  const { message } = req.body;
+  const { message } = await req.json(); 
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
